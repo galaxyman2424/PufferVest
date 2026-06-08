@@ -3,7 +3,7 @@ import numpy as np
 from pathlib import Path
 
 RAW_DIR = Path("data/raw")
-PROCESSED_DIR = Path("data/processed")
+PROCESSED_DIR = Path("/home/connor/quant-research/data/processed")
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
 TICKERS = [
