@@ -5,3 +5,4 @@ JPM
 BAC
 NVDA
 TSLA
+SPY

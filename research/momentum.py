@@ -1,13 +1,14 @@
 import pandas as pd
-import numpy as np
-from pathlib import Path
 from itertools import product
 
-PROCESSED_DIR = Path("data/processed")
-TICKERS = ["SPY", "QQQ", "DIA", "IWM", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL"]
+from config import (
+    PROCESSED_DIR,
+    FEATURE_DIR,
+    LOOKBACKS,
+    LOOKAHEADS,
+)
 
-LOOKBACKS  = [1, 5, 20, 60]
-LOOKAHEADS = [1, 5, 20, 60]
+from utils.tickers import load_tickers
 
 def load(ticker: str) -> pd.DataFrame:
     return pd.read_csv(PROCESSED_DIR / f"{ticker}.csv", index_col=0, parse_dates=True)
@@ -62,24 +63,22 @@ def print_results(results: pd.DataFrame, ticker: str):
         print(f"  {int(row.lookback):>4}  {int(row.lookahead):>4}  {row.long_ret:>10.5f}  {row.short_ret:>10.5f}  {row.spread:>10.5f}  {row.long_wr:>8.2%}  {row.short_wr:>9.2%}")
 
 def main():
+    tickers = load_tickers()
+
     all_results = []
-    for ticker in TICKERS:
+
+    for ticker in tickers:
         results = analyze_momentum(ticker)
         all_results.append(results)
         print_results(results, ticker)
 
     combined = pd.concat(all_results)
-    out = Path("data/features/momentum.csv")
-    out.parent.mkdir(parents=True, exist_ok=True)
-    combined.to_csv(out, index=False)
-    print(f"\nSaved all results → {out}")
 
-    # Best spreads across all tickers
-    print(f"\n{'='*75}")
-    print("  Top 10 Momentum Signals by Spread")
-    print(f"{'='*75}")
-    top = combined.nlargest(10, "spread")[["ticker", "lookback", "lookahead", "spread", "long_wr"]]
-    print(top.to_string(index=False))
+    out = FEATURE_DIR / "momentum.csv"
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    combined.to_csv(out, index=False)
 
 if __name__ == "__main__":
     main()

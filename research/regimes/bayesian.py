@@ -1,8 +1,8 @@
+# Replace the top of bayesian.py
+from pathlib import Path
 import pandas as pd
 import numpy as np
-from pathlib import Path
-
-PROCESSED_DIR = Path("data/processed")
+from config import PROCESSED_DIR
 
 # Prior probabilities for each regime
 PRIORS = {

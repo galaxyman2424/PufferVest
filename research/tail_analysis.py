@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
-from pathlib import Path
 
-PROCESSED_DIR = Path("data/processed")
-TICKERS = ["SPY", "QQQ", "DIA", "IWM", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL"]
+from config import PROCESSED_DIR
+from utils.tickers import load_tickers
 
 def load_returns(ticker: str) -> pd.Series:
     df = pd.read_csv(PROCESSED_DIR / f"{ticker}.csv", index_col=0, parse_dates=True)
@@ -33,8 +32,14 @@ def analyze_tails(ticker: str, returns: pd.Series):
         print(f"  {k:>4}σ  {obs_both:>9.4%}  {obs_down:>9.4%}  {obs_up:>9.4%}  {normal:>9.4%}  {chebyshev:>10.4%}  {cantelli:>9.4%}  {ratio:>6.2f}x")
 
 def main():
-    for ticker in TICKERS:
+    tickers = load_tickers()
+
+    for ticker in tickers:
         returns = load_returns(ticker)
+        if returns.empty:
+            print(f"Skipping {ticker} (no data)")
+            continue
+
         analyze_tails(ticker, returns)
 
     print(f"\n{'='*80}")

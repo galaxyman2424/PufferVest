@@ -3,13 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from scipy import stats
-from pathlib import Path
+from config import PROCESSED_DIR, VISUALIZATION_DIR
+from utils.tickers import load_tickers
 
-PROCESSED_DIR = Path("data/processed")
-OUT_DIR = Path("visualizations/output")
+OUT_DIR = VISUALIZATION_DIR
 OUT_DIR.mkdir(parents=True, exist_ok=True)
-
-TICKERS = ["SPY", "QQQ", "DIA", "IWM", "AAPL", "MSFT", "NVDA", "AMZN", "META", "GOOGL"]
 
 def load_returns(ticker: str) -> pd.Series:
     df = pd.read_csv(PROCESSED_DIR / f"{ticker}.csv", index_col=0, parse_dates=True)
@@ -56,7 +54,8 @@ def plot_distribution(ticker: str, returns: pd.Series):
     print(f"  Saved → {out}")
 
 def main():
-    for ticker in TICKERS:
+    tickers = load_tickers()
+    for ticker in tickers:
         print(f"Plotting {ticker}...")
         returns = load_returns(ticker)
         plot_distribution(ticker, returns)

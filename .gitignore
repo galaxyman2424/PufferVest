@@ -5,3 +5,6 @@ env/
 ENV/
 
 *.csv
+*.png
+*.pyc
+__pycache__/

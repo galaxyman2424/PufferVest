@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
 from hmmlearn import hmm
-from pathlib import Path
-
-PROCESSED_DIR = Path("data/processed")
+from config import PROCESSED_DIR
 
 def fit_hmm(ticker: str, n_regimes: int = 4) -> pd.DataFrame:
     df = pd.read_csv(PROCESSED_DIR / f"{ticker}.csv", index_col=0, parse_dates=True)
