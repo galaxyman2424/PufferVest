@@ -25,7 +25,7 @@ import numpy as np
 import yfinance as yf
 
 from config import PROCESSED_DIR, FEATURE_DIR
-from tickers import load_tickers
+from utils.tickers import load_tickers
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -148,10 +148,6 @@ FACTOR_WEIGHTS = {
 }
 
 def composite_score(df: pd.DataFrame) -> pd.Series:
-    """
-    Z-score each factor group, then blend with FACTOR_WEIGHTS.
-    Only uses columns that are actually present and non-NaN.
-    """
     groups = {
         "momentum":       ["mom_20", "mom_60", "mom_120", "mom_60_skip1m"],
         "mean_reversion": ["rev_zscore_20", "rev_zscore_60", "rsi_mr"],
@@ -165,9 +161,11 @@ def composite_score(df: pd.DataFrame) -> pd.Series:
         available = [c for c in cols if c in df.columns]
         if not available:
             continue
-        # Standardize each column then average across the group
         z = df[available].apply(lambda s: (s - s.mean()) / s.std())
-        group_scores[name] = z.mean(axis=1)
+        group_score = z.mean(axis=1, skipna=True)
+        if group_score.isna().all():
+            continue
+        group_scores[name] = group_score
 
     if not group_scores:
         return pd.Series(np.nan, index=df.index)
