@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
-from hmm import fit_hmm
-from bayesian import bayesian_regimes
+from research.regimes.hmm import fit_hmm
+from research.regimes.bayesian import bayesian_regimes
 
 POSITION_MULTIPLIERS = {
     # HMM labels
