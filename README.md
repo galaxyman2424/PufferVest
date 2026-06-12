@@ -113,27 +113,28 @@ quant-research/
 ├── data/
 │   ├── raw/
 │   ├── processed/
+│   ├── stock_analysis.py
+│   ├── stock_tickers.txt
 │   └── features/
 │
-├── notebooks/
-│
 ├── research/
-│   ├── hypothesis_tests/
-│   ├── distributions/
-│   ├── momentum/
-│   └── bayesian_models/
-│
-├── strategies/
-│   ├── momentum/
-│   ├── mean_reversion/
-│   └── hybrid/
-│
-├── backtesting/
+│   ├── ev/
+│   │   └── ev_analysis.py
+│   ├── backtesting/
+│   │   ├── backtest_vectorized.py
+│   │   ├── factors.py
+│   │   └── signals.py
+│   ├── strategies/
+│   │   └── strategy_runner.py
+│   ├── correlations.py
+│   ├── momentum.py
+│   └── tail_analysis.py
 │
 ├── visualizations/
+│   ├── outputs/
+│   └── return_distributions.py
 │
-├── outputs/
-│
+├── config.py
 └── README.md
 ```
 
